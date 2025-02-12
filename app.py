@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from datetime import datetime
+import os
 import attendance
 
 app = Flask(__name__)
@@ -35,5 +36,6 @@ def index():
     
     return render_template('index.html', today=datetime.now().date(), visitor_count=visitor_count, creator_name="Your Name")
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
