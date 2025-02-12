@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">📊</div>
+            <h1>Smart Attendance Planner</h1>
+            <p>Calculate exactly how many lectures you need to attend to maintain your targets</p>
+            <div class="header-meta">
+                <span class="creator-name">Created by: Puneet Poddar </span>
+                <span class="visitor-count">Visitors: {{ visitor_count }}</span>
+            </div>
+        </div>
+
+        <form class="attendance-form" method="POST">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>
+                        <span class="input-icon">✅</span>
+                        Lectures Attended
+                    </label>
+                    <input type="number" name="attended" required>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <span class="input-icon">📆</span>
+                        Lectures Conducted
+                    </label>
+                    <input type="number" name="conducted" required>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <span class="input-icon">⏳</span>
+                        Deadline Date
+                    </label>
+                    <input type="date" name="deadline" 
+                           min="{{ today.strftime('%Y-%m-%d') }}" 
+                           value="{{ today.strftime('%Y-%m-%d') }}" 
+                           required>
+                </div>
+            </div>
+
+            <div class="toggle-section">
+                <label class="toggle-switch">
+                    <input type="checkbox" name="simulate_skip" id="skipToggle">
+                    <span class="slider"></span>
+                    <span class="toggle-label">Plan to skip lectures?</span>
+                </label>
+
+                <div id="skipPeriod" class="skip-period">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Skip Start Date</label>
+                            <input type="date" name="skip_start">
+                        </div>
+                        <div class="input-group">
+                            <label>Skip End Date</label>
+                            <input type="date" name="skip_end">
+                        </div>
+                    </div>
+                    <p class="hint">🔒 Selected dates must be between tomorrow and your deadline</p>
+                </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">
+                Generate Attendance Plan 🚀
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const deadlineInput = document.querySelector("input[name='deadline']");
+            deadlineInput.value = ""; // Clear the auto-filled date
+
+            document.querySelector(".attendance-form").addEventListener("submit", function(event) {
+                if (!deadlineInput.value.trim()) {
+                    alert("Please select a deadline date.");
+                    event.preventDefault(); // Stops form submission
+                }
+            });
+
+            document.getElementById('skipToggle').addEventListener('change', function() {
+                const skipPeriod = document.getElementById('skipPeriod');
+                skipPeriod.style.display = this.checked ? 'block' : 'none';
+                if (this.checked) {
+                    skipPeriod.animate([
+                        { opacity: 0, transform: 'translateY(-10px)' },
+                        { opacity: 1, transform: 'translateY(0)' }
+                    ], { duration: 300 });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

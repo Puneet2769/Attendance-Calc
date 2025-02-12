@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1>📈 Your Attendance Report</h1>
+            <div class="deadline-info">
+                <span class="deadline-tag">Deadline</span>
+                <span class="deadline-date">{{ results.deadline.strftime('%d %b %Y') }}</span>
+                <span class="days-remaining">({{ (results.deadline - results.today).days }} days remaining)</span>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ "%.2f"|format(results.current_attendance) }}%</div>
+                <div class="stat-label">Current Attendance</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value">{{ results.future_lectures_total }}</div>
+                <div class="stat-label">Lectures Remaining</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value">{{ "%.2f"|format(results.projected_attendance_percentage) }}%</div>
+                <div class="stat-label">Projected Attendance</div>
+            </div>
+        </div>
+
+        <div class="threshold-section">
+            <h2>📌 Target Analysis</h2>
+            
+            {% for threshold in results.thresholds %}
+            <div class="threshold-card {% if threshold.extra_needed %}warning{% else %}safe{% endif %}">
+                <div class="threshold-header">
+                    <span class="target-percent">{{ threshold.target }}%</span>
+                    <span class="status-tag">
+                        {% if threshold.extra_needed %}Action Required{% else %}Target Safe{% endif %}
+                    </span>
+                </div>
+
+                {% if threshold.extra_needed %}
+                <div class="threshold-body">
+                    <div class="warning-message">
+                        ⚠️ You need to attend <strong>{{ threshold.extra_needed }} more lectures</strong>
+                    </div>
+                    <div class="critical-dates">
+                        <div class="date-info">
+                            <span class="date-label">Must start attending from:</span>
+                            <span class="date-value">
+                                {{ threshold.last_start_date.strftime('%d %b %Y') }}
+                            </span>
+                        </div>
+                        <div class="date-info">
+                            <span class="date-label">Days available:</span>
+                            <span class="date-value">
+                                {{ (results.deadline - threshold.last_start_date).days }} days
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                {% else %}
+                <div class="threshold-body">
+                    <div class="safe-message">
+                        🎉 You can skip <strong>{{ threshold.additional_skip }} more lectures</strong>
+                    </div>
+                    <div class="safe-dates">
+                        <div class="date-info">
+                            <span class="date-label">Can skip until:</span>
+                            <span class="date-value">
+                                {{ threshold.new_skip_end_date.strftime('%d %b %Y') }}
+                            </span>
+                        </div>
+                        <div class="date-info">
+                            <span class="date-label">Equivalent to:</span>
+                            <span class="date-value">
+                                {{ "%.1f"|format(threshold.weeks_equivalent) }} weeks
+                                ({{ "%.1f"|format(threshold.months_equivalent) }} months)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
