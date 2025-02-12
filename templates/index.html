@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Planner</title>
+    <title>Smart Attendance Planner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -12,10 +12,10 @@
         <div class="header">
             <div class="header-icon">📊</div>
             <h1>Smart Attendance Planner</h1>
-            <p>Calculate exactly how many lectures you need to attend to maintain your targets</p>
+            <p>Calculate exactly how many lectures you need to attend to maintain your attendance goals.</p>
             <div class="header-meta">
-                <span class="creator-name">Created by: Puneet Poddar </span>
-                <span class="visitor-count">Visitors: {{ visitor_count }}</span>
+                <span class="creator-name">Created by: Puneet Poddar</span>
+                <span class="visitor-count">Total Visitors: {{ visitor_count }}</span>
             </div>
         </div>
 
@@ -24,23 +24,23 @@
                 <div class="input-group">
                     <label>
                         <span class="input-icon">✅</span>
-                        Lectures Attended
+                        Total Lectures Attended
                     </label>
-                    <input type="number" name="attended" required>
+                    <input type="number" name="attended" placeholder="Enter the number of lectures you've attended" required>
                 </div>
 
                 <div class="input-group">
                     <label>
                         <span class="input-icon">📆</span>
-                        Lectures Conducted
+                        Total Lectures Conducted
                     </label>
-                    <input type="number" name="conducted" required>
+                    <input type="number" name="conducted" placeholder="Enter the total number of lectures conducted" required>
                 </div>
 
                 <div class="input-group">
                     <label>
                         <span class="input-icon">⏳</span>
-                        Deadline Date
+                        Attendance Deadline Date
                     </label>
                     <input type="date" name="deadline" 
                            min="{{ today.strftime('%Y-%m-%d') }}" 
@@ -49,11 +49,43 @@
                 </div>
             </div>
 
+            <div class="form-grid">
+                <h3>Weekly Lecture Schedule (per day)</h3>
+                <div class="input-group">
+                    <label>Monday</label>
+                    <input type="number" name="monday" min="0" placeholder="Lectures on Monday" required>
+                </div>
+                <div class="input-group">
+                    <label>Tuesday</label>
+                    <input type="number" name="tuesday" min="0" placeholder="Lectures on Tuesday" required>
+                </div>
+                <div class="input-group">
+                    <label>Wednesday</label>
+                    <input type="number" name="wednesday" min="0" placeholder="Lectures on Wednesday" required>
+                </div>
+                <div class="input-group">
+                    <label>Thursday</label>
+                    <input type="number" name="thursday" min="0" placeholder="Lectures on Thursday" required>
+                </div>
+                <div class="input-group">
+                    <label>Friday</label>
+                    <input type="number" name="friday" min="0" placeholder="Lectures on Friday" required>
+                </div>
+                <div class="input-group">
+                    <label>Saturday</label>
+                    <input type="number" name="saturday" min="0" placeholder="Lectures on Saturday" required>
+                </div>
+                <div class="input-group">
+                    <label>Sunday</label>
+                    <input type="number" name="sunday" value="0" readonly>
+                </div>
+            </div>
+
             <div class="toggle-section">
                 <label class="toggle-switch">
                     <input type="checkbox" name="simulate_skip" id="skipToggle">
                     <span class="slider"></span>
-                    <span class="toggle-label">Plan to skip lectures?</span>
+                    <span class="toggle-label">Do you plan to skip any lectures?</span>
                 </label>
 
                 <div id="skipPeriod" class="skip-period">
@@ -67,12 +99,12 @@
                             <input type="date" name="skip_end">
                         </div>
                     </div>
-                    <p class="hint">🔒 Selected dates must be between tomorrow and your deadline</p>
+                    <p class="hint">🔒 Note: Selected skip dates must be between tomorrow and your chosen deadline date.</p>
                 </div>
             </div>
 
             <button type="submit" class="calculate-btn">
-                Generate Attendance Plan 🚀
+                Generate Your Attendance Plan 🚀
             </button>
         </form>
     </div>
@@ -80,12 +112,12 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const deadlineInput = document.querySelector("input[name='deadline']");
-            deadlineInput.value = ""; // Clear the auto-filled date
+            deadlineInput.value = ""; // Clear any pre-filled date
 
             document.querySelector(".attendance-form").addEventListener("submit", function(event) {
                 if (!deadlineInput.value.trim()) {
-                    alert("Please select a deadline date.");
-                    event.preventDefault(); // Stops form submission
+                    alert("Please select a deadline date before submitting.");
+                    event.preventDefault(); // Prevent form submission if no date is selected
                 }
             });
 
