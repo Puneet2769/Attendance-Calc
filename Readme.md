@@ -2,6 +2,8 @@
 
 **Attendance Calculator** is a sleek and intuitive web app designed to help students and professionals calculate, project, and strategize their attendance. Whether you're tracking lectures, planning future attendance, or simulating skipped sessions, this tool has you covered!
 
+jackmortan21.pythonanywhere.com
+
 ## Features ✨
 
 - **Real-time Calculation:**  
@@ -122,3 +124,4 @@ GitHub: Puneet2769
 Website: https://puneet33.pythonanywhere.com/
 
 Happy Coding! 💻✨
+
